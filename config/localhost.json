@@ -1,0 +1,5 @@
+{
+    "MongoUrl":"mongodb+srv://akshat:akki5101@cluster0.dxszy3f.mongodb.net/Banking_System?retryWrites=true&w=majority&appName=Cluster0",
+    "PORT":3000,
+    "SecretKey":"Akshat"
+}
