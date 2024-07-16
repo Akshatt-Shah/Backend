@@ -3,6 +3,7 @@ import { ITransaction } from "../interfaces";
 import { Transaction } from "../models";
 import { msg } from "../utills";
 import { Accountservices } from "./account.services";
+import User from "../models/user.model";
 const Aservice = new Accountservices();
 
 export class Transactionservices {
@@ -142,6 +143,150 @@ export class Transactionservices {
         status: true,
         data: Transactiondata,
       };
+    } catch (error: any) {
+      return { message: error.message, status: false };
+    }
+  }
+  async getAllTransaction(id: String, role: String) {
+    try {
+      if (role === "admin") {
+        const Transactiondata = await Transaction.aggregate([
+          {
+            $lookup: {
+              from: "accounts",
+              localField: "sender_account_no",
+              foreignField: "Account_No",
+              as: "SenderAccount",
+            },
+          },
+
+          {
+            $lookup: {
+              from: "accounts",
+              localField: "receiver_account_no",
+              foreignField: "Account_No",
+              as: "ReciewerAccount",
+            },
+          },
+          {
+            $unwind: {
+              path: "$SenderAccount",
+            },
+          },
+          {
+            $unwind: {
+              path: "$ReciewerAccount",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "SenderAccount.user",
+              foreignField: "_id",
+              as: "SenderUser",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "ReciewerAccount.user",
+              foreignField: "_id",
+              as: "ReciewerUser",
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              transactionType: 1,
+              amount: 1,
+              SenderAccount_No: "$SenderAccount.Account_No",
+              // Sender_id: { $first: ["$SenderUser._id"] },
+              Sender_Name: { $first: ["$SenderUser.name"] },
+              RecieverAccount_No: "$ReciewerAccount.Account_No",
+              // Reciewer_id: { $first: ["$ReciewerUser._id"] },
+              Reciewer_Name: { $first: ["$ReciewerUser.name"] },
+              date: 1,
+            },
+          },
+        ]);
+        console.log(Transactiondata);
+        return {
+          message: msg.getsuccess("Transaction"),
+          status: true,
+          data: Transactiondata,
+        };
+      } else {
+        const Transactiondata = await Transaction.aggregate([
+          {
+            $match: {
+              userid: new mongoose.Types.ObjectId(String(id)),
+            },
+          },
+          {
+            $lookup: {
+              from: "accounts",
+              localField: "sender_account_no",
+              foreignField: "Account_No",
+              as: "SenderAccount",
+            },
+          },
+
+          {
+            $lookup: {
+              from: "accounts",
+              localField: "receiver_account_no",
+              foreignField: "Account_No",
+              as: "ReciewerAccount",
+            },
+          },
+          {
+            $unwind: {
+              path: "$SenderAccount",
+            },
+          },
+          {
+            $unwind: {
+              path: "$ReciewerAccount",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "SenderAccount.user",
+              foreignField: "_id",
+              as: "SenderUser",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "ReciewerAccount.user",
+              foreignField: "_id",
+              as: "ReciewerUser",
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              transactionType: 1,
+              amount: 1,
+              SenderAccount_No: "$SenderAccount.Account_No",
+              // Sender_id: { $first: ["$SenderUser._id"] },
+              Sender_Name: { $first: ["$SenderUser.name"] },
+              RecieverAccount_No: "$ReciewerAccount.Account_No",
+              // Reciewer_id: { $first: ["$ReciewerUser._id"] },
+              Reciewer_Name: { $first: ["$ReciewerUser.name"] },
+              date: 1,
+            },
+          },
+        ]);
+        console.log(Transactiondata);
+        return {
+          message: msg.getsuccess("Transaction"),
+          status: true,
+          data: Transactiondata,
+        };
+      }
     } catch (error: any) {
       return { message: error.message, status: false };
     }

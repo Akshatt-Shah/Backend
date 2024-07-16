@@ -4,5 +4,6 @@ export interface ITransaction {
   transactionType: "Credit" | "Debit" | "Transfer";
   description: string;
   amount: number;
+  userid?:string;
   date?: Date;
 }

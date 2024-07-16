@@ -33,6 +33,16 @@ export class usercontrolleres {
         .json({ message: error.message, status: false });
     }
   }
+  async getAllUser(req: NewRequest, res: Response) {
+    try {
+      const userData = await uservice.getAllUser();
+      res.status(status.ok).json(userData);
+    } catch (error: any) {
+      res
+        .status(status.server_error)
+        .json({ message: error.message, status: false });
+    }
+  }
   async updateUser(req: NewRequest, res: Response) {
     try {
       const { userid } = req.user;

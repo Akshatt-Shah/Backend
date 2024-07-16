@@ -21,6 +21,12 @@ trouter.get(
   authorizeRoles(["user", "admin"]),
   ucontrollere.getTransaction
 );
+trouter.get(
+  "/Transaction/getTransaction",
+  authenticateToken,
+  authorizeRoles(["user","admin"]),
+  ucontrollere.getAllTransaction
+);
 trouter.put(
   "/Transaction/updateTransaction/:Transactionid",
   authenticateToken,

@@ -13,7 +13,7 @@ export function startserver() {
     app.use(express.json());
     app.use(
       cors({
-        origin: "*",
+        origin: "http://localhost:4200",
         credentials: true,
       })
     );

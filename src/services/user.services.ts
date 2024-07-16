@@ -35,6 +35,18 @@ export class userservices {
       return { message: error.message, status: false };
     }
   }
+  async getAllUser() {
+    try {
+      const userdata = await User.find();
+        return {
+          message: msg.getsuccess("User"),
+          status: true,
+          data: userdata,
+        };
+    } catch (error: any) {
+      return { message: error.message, status: false };
+    }
+  }
   async updateUser(id: String, data: IUser) {
     try {
       const userdata = await User.findOneAndUpdate({ _id: id }, data, {

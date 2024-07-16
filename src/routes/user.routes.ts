@@ -18,6 +18,10 @@ urouter.get(
   authorizeRoles(["user", "admin"]),
   ucontrollere.getUser
 );
+urouter.get(
+  "/user/getAllUser",
+  ucontrollere.getAllUser
+);
 urouter.put(
   "/user/updateuser",
   authenticateToken,
